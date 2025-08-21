@@ -1,6 +1,9 @@
+package com.example;
+
 import org.openqa.selenium.remote.DesiredCapabilities;
-import java.net.URL;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import java.net.URL;
+import java.util.HashMap;   // ✅ this was missing
 
 public class FirstTest {
     public static void main(String[] args) throws Exception {
@@ -11,7 +14,7 @@ public class FirstTest {
         caps.setCapability("browserVersion", "latest");
         caps.setCapability("platformName", "Windows 10");
 
-        // LambdaTest options (wrapped inside LT:Options)
+        // LambdaTest options
         HashMap<String, Object> ltOptions = new HashMap<String, Object>();
         ltOptions.put("username", System.getenv("LT_USERNAME"));
         ltOptions.put("accessKey", System.getenv("LT_ACCESS_KEY"));
@@ -21,12 +24,13 @@ public class FirstTest {
         caps.setCapability("LT:Options", ltOptions);
 
         RemoteWebDriver driver = new RemoteWebDriver(
-            new URL("https://hub.lambdatest.com/wd/hub"), 
+            new URL("https://hub.lambdatest.com/wd/hub"),
             caps
         );
 
         driver.get("https://www.google.com");
         System.out.println("Title: " + driver.getTitle());
+
         driver.quit();
     }
 }
