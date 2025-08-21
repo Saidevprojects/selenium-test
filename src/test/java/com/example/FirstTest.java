@@ -1,38 +1,32 @@
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.Test;
-
-import java.net.MalformedURLException;
 import java.net.URL;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class FirstTest {
+    public static void main(String[] args) throws Exception {
+        DesiredCapabilities caps = new DesiredCapabilities();
 
-    @Test
-    public void testGoogleTitle() throws MalformedURLException {
-        // Fetch credentials from GitHub Actions secrets
-        String username = System.getenv("LT_USERNAME");
-        String accessKey = System.getenv("LT_ACCESS_KEY");
+        // Mandatory capabilities
+        caps.setCapability("browserName", "Chrome");
+        caps.setCapability("browserVersion", "latest");
+        caps.setCapability("platformName", "Windows 10");
 
-        // LambdaTest Grid URL
-        String gridURL = "https://" + username + ":" + accessKey + "@hub.lambdatest.com/wd/hub";
+        // LambdaTest options (wrapped inside LT:Options)
+        HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+        ltOptions.put("username", System.getenv("LT_USERNAME"));
+        ltOptions.put("accessKey", System.getenv("LT_ACCESS_KEY"));
+        ltOptions.put("build", "GitHub Actions Selenium Build");
+        ltOptions.put("name", "FirstTest");
 
-        // Desired Capabilities
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("browserName", "Chrome");
-        capabilities.setCapability("browserVersion", "latest");
-        capabilities.setCapability("platformName", "Windows 10");
-        capabilities.setCapability("build", "GitHub Actions Selenium Build");
-        capabilities.setCapability("name", "FirstTest");
+        caps.setCapability("LT:Options", ltOptions);
 
-        // Start Remote WebDriver
-        WebDriver driver = new RemoteWebDriver(new URL(gridURL), capabilities);
+        RemoteWebDriver driver = new RemoteWebDriver(
+            new URL("https://hub.lambdatest.com/wd/hub"), 
+            caps
+        );
 
-        // Test
         driver.get("https://www.google.com");
-        System.out.println("Title is: " + driver.getTitle());
-
-        // Cleanup
+        System.out.println("Title: " + driver.getTitle());
         driver.quit();
     }
 }
